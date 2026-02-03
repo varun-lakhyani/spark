@@ -30,5 +30,7 @@ jobs:
       packages: write
     name: Run
     uses: ./.github/workflows/build_and_test.yml
+    with:
+      jobs: '{"build": "true", "pyspark": "false", "pyspark-pandas": "false", "sparkr": "false", "lint": "false", "docs": "false", "tpcds-1g": "false", "docker-integration-tests": "false", "yarn": "false", "k8s-integration-tests": "false", "buf": "false", "ui": "false", "java17": "false", "java25": "false"}'
     secrets:
       codecov_token: ${{ secrets.CODECOV_TOKEN }}

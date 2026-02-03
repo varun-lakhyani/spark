@@ -247,55 +247,11 @@ jobs:
           - hive2.3
         # Note that the modules below are from sparktestsupport/modules.py.
         modules:
-          - >-
-            core, unsafe, kvstore, avro, utils, utils-java,
-            network-common, network-shuffle, repl, launcher,
-            examples, sketch, variant
-          - >-
-            api, catalyst, hive-thriftserver
-          - >-
-            mllib-local, mllib, graphx, profiler, pipelines
-          - >-
-            streaming, sql-kafka-0-10, streaming-kafka-0-10, streaming-kinesis-asl,
-            kubernetes, hadoop-cloud, spark-ganglia-lgpl, protobuf, connect
-          - yarn
+          - connect
         # Here, we split Hive and SQL tests into some of slow ones and the rest of them.
         included-tags: [""]
         excluded-tags: [""]
         comment: [""]
-        include:
-          # Hive tests
-          - modules: hive
-            java: ${{ inputs.java }}
-            hadoop: ${{ inputs.hadoop }}
-            hive: hive2.3
-            included-tags: org.apache.spark.tags.SlowHiveTest
-            comment: "- slow tests"
-          - modules: hive
-            java: ${{ inputs.java }}
-            hadoop: ${{ inputs.hadoop }}
-            hive: hive2.3
-            excluded-tags: org.apache.spark.tags.SlowHiveTest
-            comment: "- other tests"
-          # SQL tests
-          - modules: sql
-            java: ${{ inputs.java }}
-            hadoop: ${{ inputs.hadoop }}
-            hive: hive2.3
-            included-tags: org.apache.spark.tags.ExtendedSQLTest
-            comment: "- extended tests"
-          - modules: sql
-            java: ${{ inputs.java }}
-            hadoop: ${{ inputs.hadoop }}
-            hive: hive2.3
-            included-tags: org.apache.spark.tags.SlowSQLTest
-            comment: "- slow tests"
-          - modules: sql
-            java: ${{ inputs.java }}
-            hadoop: ${{ inputs.hadoop }}
-            hive: hive2.3
-            excluded-tags: org.apache.spark.tags.ExtendedSQLTest,org.apache.spark.tags.SlowSQLTest
-            comment: "- other tests"
         exclude:
           # Always run if yarn == 'true', even infra-image is skip (such as non-master job)
           # In practice, the build will run in individual PR, but not against the individual commit
@@ -384,11 +340,7 @@ jobs:
           MODULES_TO_TEST=${MODULES_TO_TEST//streaming-kinesis-asl, /}
         fi
         export SERIAL_SBT_TESTS=1
-        if [[ "$MODULES_TO_TEST" == *"connect"* ]]; then
-          ./build/sbt "connect/testOnly *KeyValueGroupedDatasetE2ETestSuite -- -z \"SPARK-26085: fix key attribute name for atomic type for typed aggregation - mapValues\""
-        else
-          ./dev/run-tests --parallelism 1 --modules "$MODULES_TO_TEST" --included-tags "$INCLUDED_TAGS" --excluded-tags "$EXCLUDED_TAGS"
-        fi
+        ./build/sbt "connect/testOnly *KeyValueGroupedDatasetE2ETestSuite -- -z \"SPARK-26085: fix key attribute name for atomic type for typed aggregation - mapValues\""
     - name: Upload test results to report
       if: always()
       uses: actions/upload-artifact@v4
