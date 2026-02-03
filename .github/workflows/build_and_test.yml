@@ -384,7 +384,11 @@ jobs:
           MODULES_TO_TEST=${MODULES_TO_TEST//streaming-kinesis-asl, /}
         fi
         export SERIAL_SBT_TESTS=1
-        ./dev/run-tests --parallelism 1 --modules "$MODULES_TO_TEST" --included-tags "$INCLUDED_TAGS" --excluded-tags "$EXCLUDED_TAGS"
+        if [[ "$MODULES_TO_TEST" == *"connect"* ]]; then
+          ./build/sbt "connect/testOnly *KeyValueGroupedDatasetE2ETestSuite -- -z \"SPARK-26085: fix key attribute name for atomic type for typed aggregation - mapValues\""
+        else
+          ./dev/run-tests --parallelism 1 --modules "$MODULES_TO_TEST" --included-tags "$INCLUDED_TAGS" --excluded-tags "$EXCLUDED_TAGS"
+        fi
     - name: Upload test results to report
       if: always()
       uses: actions/upload-artifact@v4
