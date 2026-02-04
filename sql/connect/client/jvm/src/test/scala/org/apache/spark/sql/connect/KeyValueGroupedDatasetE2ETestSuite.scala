@@ -456,12 +456,17 @@ class KeyValueGroupedDatasetE2ETestSuite extends QueryTest with RemoteSparkSessi
 
   // TODO(SPARK-50837): "ds.schema" is wrong: the column is named as "iv.key".
   test("SPARK-26085: fix key attribute name for atomic type for typed aggregation - mapValues") {
-    val ds = Seq(1, 2, 3).toDS()
-    assert(ds.groupByKey(x => x).mapValues(x => x).count().schema.head.name == "key")
+    System.setProperty("debug.spark260855", "true")
+    try {
+      val ds = Seq(1, 2, 3).toDS()
+      assert(ds.groupByKey(x => x).mapValues(x => x).count().schema.head.name == "key")
 
-    // Enable legacy flag to follow previous Spark behavior
-    withSQLConf("spark.sql.legacy.dataset.nameNonStructGroupingKeyAsValue" -> "true") {
-      assert(ds.groupByKey(x => x).mapValues(x => x).count().schema.head.name == "value")
+      // Enable legacy flag to follow previous Spark behavior
+      withSQLConf("spark.sql.legacy.dataset.nameNonStructGroupingKeyAsValue" -> "true") {
+        assert(ds.groupByKey(x => x).mapValues(x => x).count().schema.head.name == "value")
+      }
+    } finally {
+      System.clearProperty("debug.spark260855")
     }
   }
 
