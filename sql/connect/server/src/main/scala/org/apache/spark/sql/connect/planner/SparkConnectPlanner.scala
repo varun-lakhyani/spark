@@ -2589,22 +2589,22 @@ class SparkConnectPlanner(
           // and also via RelationalGroupedDS#as, as the first is a dummy UDF currently.
           if rel.getGroupingExpressionsList.size() >= 1 &&
             isTypedScalaUdfExpr(rel.getGroupingExpressionsList.get(0)) =>
-        if (System.getProperty("debug.spark260855") == "true") {
-          throw new RuntimeException(
-            "DEBUG SPARK-26085: Taking transformKeyValueGroupedAggregate path")
-        }
+//        if (System.getProperty("debug.spark260855") == "true") {
+        throw new RuntimeException(
+          "DEBUG SPARK-26085: Taking transformKeyValueGroupedAggregate path")
+//        }
         transformKeyValueGroupedAggregate(rel)
       case _ =>
-        if (System.getProperty("debug.spark260855") == "true") {
-          val groupingSize = rel.getGroupingExpressionsList.size()
-          val isTypedUdf = if (groupingSize > 0) {
-            isTypedScalaUdfExpr(rel.getGroupingExpressionsList.get(0))
-          } else false
+//        if (System.getProperty("debug.spark260855") == "true") {
+        val groupingSize = rel.getGroupingExpressionsList.size()
+        val isTypedUdf = if (groupingSize > 0) {
+          isTypedScalaUdfExpr(rel.getGroupingExpressionsList.get(0))
+        } else false
 
-          throw new RuntimeException(
-            s"DEBUG SPARK-26085: Relational path - GroupingSize: $groupingSize, " +
-              s"IsTypedUdf: $isTypedUdf")
-        }
+        throw new RuntimeException(
+          s"DEBUG SPARK-26085: Relational path - GroupingSize: $groupingSize, " +
+            s"IsTypedUdf: $isTypedUdf")
+//        }
         transformRelationalGroupedAggregate(rel)
     }
   }
