@@ -2587,8 +2587,15 @@ class SparkConnectPlanner(
           // This relies on the assumption that a KVGDS always requires the head to be a Typed UDF.
           // This is the case for datasets created via groupByKey,
           // and also via RelationalGroupedDS#as, as the first is a dummy UDF currently.
-          if rel.getGroupingExpressionsList.size() >= 1 &&
-            isTypedScalaUdfExpr(rel.getGroupingExpressionsList.get(0)) =>
+          if rel.getGroupingExpressionsList.size() >= 1 =>
+        val firstExpr = rel.getGroupingExpressionsList.get(0)
+
+        // DEBUG: Print the actual expression structure
+        throw new RuntimeException(
+          s"DEBUG SPARK-26085: First grouping expr type: ${firstExpr.getExprTypeCase}, " +
+            s"HasCommonInlineUserDefinedFunction: " +
+            s"${firstExpr.hasCommonInlineUserDefinedFunction}, " +
+            s"Full expr: ${firstExpr}")
         throw new RuntimeException(s"DEBUG SPARK-26085: sahi path hai keyvaluewgrouping wala")
         transformKeyValueGroupedAggregate(rel)
       case _ =>

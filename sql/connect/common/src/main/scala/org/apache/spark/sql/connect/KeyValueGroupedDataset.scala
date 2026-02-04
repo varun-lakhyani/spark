@@ -512,6 +512,10 @@ private class KeyValueGroupedDatasetImpl[K, V, IK, IV](
     // would not be flattened.
     // Also here we detect if the input "iv" is a single field struct. If yes, we rename the field
     // to "key" to align with Spark behaviour.
+//    throw new RuntimeException(
+//      s"DEBUG SPARK-26085: Relational path - GroupingSize: " +
+//        s"${rel.getGroupingExpressionsList.size()}" +
+//        s"IsTypedUdf: $isTypedUdf")
     val valueTransformedDf = renamePrimitiveIV(applyValueMapFunc(originalDs))
     val ivFields = extractColumnNamesFromEnc(ivEncoder)
     val vFields = extractColumnNamesFromEnc(vEncoder, namePrimitiveAsKey = false)
