@@ -2606,7 +2606,7 @@ class SparkConnectPlanner(
 
         throw new RuntimeException(
           s"DEBUG SPARK-26085: Relational path - GroupingSize: $groupingSize, " +
-            s"IsTypedUdf: $isTypedUdf")
+            s"IsTypedUdf: $isTypedUdf" + s"complete not just 0:  ${rel.getGroupingExpressionsList}")
         transformRelationalGroupedAggregate(rel)
     }
   }
