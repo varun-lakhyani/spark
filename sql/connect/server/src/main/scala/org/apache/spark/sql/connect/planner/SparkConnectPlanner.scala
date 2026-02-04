@@ -2596,10 +2596,12 @@ class SparkConnectPlanner(
   }
 
   private def transformKeyValueGroupedAggregate(rel: proto.Aggregate): LogicalPlan = {
+
     val input = transformRelation(rel.getInput)
     val ds = UntypedKeyValueGroupedDataset(input, rel.getGroupingExpressionsList, Seq.empty)
 
     val keyColumn = TypedAggUtils.aggKeyColumn(ds.kEncoder, ds.groupingAttributes)
+    throw new RuntimeException(s"DEBUG SPARK-26085: Relational path - GroupingSize $keyColumn")
     val namedColumns = rel.getAggregateExpressionsList.asScala.toSeq
       .map(expr => transformExpressionWithTypedReduceExpression(expr, ds.analyzedData))
       .map(toNamedExpression)
