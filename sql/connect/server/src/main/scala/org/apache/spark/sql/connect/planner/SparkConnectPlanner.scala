@@ -2589,8 +2589,17 @@ class SparkConnectPlanner(
           // and also via RelationalGroupedDS#as, as the first is a dummy UDF currently.
           if rel.getGroupingExpressionsList.size() >= 1 &&
             isTypedScalaUdfExpr(rel.getGroupingExpressionsList.get(0)) =>
+        throw new RuntimeException(s"DEBUG SPARK-26085: sahi path hai keyvaluewgrouping wala")
         transformKeyValueGroupedAggregate(rel)
       case _ =>
+        val groupingSize = rel.getGroupingExpressionsList.size()
+        val isTypedUdf = if (groupingSize > 0) {
+          isTypedScalaUdfExpr(rel.getGroupingExpressionsList.get(0))
+        } else false
+
+        throw new RuntimeException(
+          s"DEBUG SPARK-26085: Relational path - GroupingSize: $groupingSize, " +
+            s"IsTypedUdf: $isTypedUdf")
         transformRelationalGroupedAggregate(rel)
     }
   }
