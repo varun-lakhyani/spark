@@ -34,19 +34,19 @@ private[sql] object TypedAggUtils {
     if (!agnosticEncoder.isStruct) {
       if (SQLConf.get.nameNonStructGroupingKeyAsValue) {
         groupingAttributes.head
-        throw new RuntimeException(
-          s"ye to config dikkat de rahi hai " +
-            s"DEBUG SPARK-26085: Relational path - GroupingSize ${groupingAttributes.head}")
+//        throw new RuntimeException(
+//          s"ye to config dikkat de rahi hai " +
+//            s"DEBUG SPARK-26085: Relational path - GroupingSize ${groupingAttributes.head}")
       } else {
         Alias(groupingAttributes.head, "key")()
-        throw new RuntimeException(
-          s"DEBUG SPARK-26085: Relational path - GroupingSize ${groupingAttributes.head}")
+//        throw new RuntimeException(
+//          s"DEBUG SPARK-26085: Relational path - GroupingSize ${groupingAttributes.head}")
       }
     } else {
       Alias(CreateStruct(groupingAttributes), "key")()
-      throw new RuntimeException(
-        s"struct kese bana raha hai ye ajeeb tarike se  " +
-          s"DEBUG SPARK-26085: Relational path - GroupingSize ${groupingAttributes.head}")
+//      throw new RuntimeException(
+//        s"struct kese bana raha hai ye ajeeb tarike se  " +
+//          s"DEBUG SPARK-26085: Relational path - GroupingSize ${groupingAttributes.head}")
     }
   }
 

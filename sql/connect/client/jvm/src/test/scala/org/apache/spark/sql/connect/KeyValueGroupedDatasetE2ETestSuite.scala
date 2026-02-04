@@ -459,7 +459,10 @@ class KeyValueGroupedDatasetE2ETestSuite extends QueryTest with RemoteSparkSessi
     System.setProperty("debug.spark260855", "true")
     try {
       val ds = Seq(1, 2, 3).toDS()
-      assert(ds.groupByKey(x => x).mapValues(x => x).count().schema.head.name == "key")
+
+      val kyaaarahahai = ds.groupByKey(x => x).mapValues(x => x).count().schema.head.name
+      throw new RuntimeException(
+        s"DEBUG SPARK-26085: Relational path - GroupingSize $kyaaarahahai")
 
       // Enable legacy flag to follow previous Spark behavior
       withSQLConf("spark.sql.legacy.dataset.nameNonStructGroupingKeyAsValue" -> "true") {
