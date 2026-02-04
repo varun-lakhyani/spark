@@ -522,7 +522,7 @@ private class KeyValueGroupedDatasetImpl[K, V, IK, IV](
 
     // Rewrite grouping expressions to use "iv" as input.
     val updatedGroupingExprs = groupingColumns
-//      .filterNot(c => KeyValueGroupedDatasetImpl.containsDummyUDF(c.node))
+      .filterNot(c => KeyValueGroupedDatasetImpl.containsDummyUDF(c.node))
       .map(c =>
         toExprWithTransformation(c.node, encoder = None, rewriteInputColumnHook("iv", ivFields)))
     // Rewrite aggregate columns to use "v" as input.
