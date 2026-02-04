@@ -2595,7 +2595,7 @@ class SparkConnectPlanner(
           s"DEBUG SPARK-26085: First grouping expr type: ${firstExpr.getExprTypeCase}, " +
             s"HasCommonInlineUserDefinedFunction: " +
             s"${firstExpr.hasCommonInlineUserDefinedFunction}, " +
-            s"Full expr: ${firstExpr}")
+            s"Full expr: ${firstExpr}" + s"complete not just 0:  ${rel.getGroupingExpressionsList}")
         throw new RuntimeException(s"DEBUG SPARK-26085: sahi path hai keyvaluewgrouping wala")
         transformKeyValueGroupedAggregate(rel)
       case _ =>
@@ -2606,7 +2606,7 @@ class SparkConnectPlanner(
 
         throw new RuntimeException(
           s"DEBUG SPARK-26085: Relational path - GroupingSize: $groupingSize, " +
-            s"IsTypedUdf: $isTypedUdf" + s"complete not just 0:  ${rel.getGroupingExpressionsList}")
+            s"IsTypedUdf: $isTypedUdf")
         transformRelationalGroupedAggregate(rel)
     }
   }
